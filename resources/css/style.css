@@ -1,0 +1,72 @@
+html {
+  background-color: #d1ae92;
+  background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding-top: 8rem;
+}
+
+/*Universal Styles*/
+div {
+  border: 1px solid black;
+}
+
+/*Outer circle*/
+.outer-circle {
+  margin-top: 8rem;
+  width: 28rem;
+  height: 28rem;;
+  background-color: #404040;
+  border-radius: 100%;
+  position: relative;
+  text-align: center;
+  margin: auto;
+}
+
+/*Inner circle*/
+.inner-circle {
+  position: relative;
+  top: 0.75rem;
+}
+
+/*Circle quadrants*/
+.row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: -6px;
+}
+
+.quad {
+  display: inline-block;
+  position: relative;
+  width: 12rem;
+  height: 12rem;
+  border: 10px solid #404040;
+}
+
+.green {
+  background-color: green;
+  /*margin: 0px 4px 8px 0px;*/
+  border-top-left-radius: 100%;
+}
+
+.red {
+  background-color: red;
+  /*margin: 0px 0px 8px 4px;*/
+  border-top-right-radius: 100%;
+}
+
+.yellow {
+  background-color: yellow;
+  /*margin: 0px 4px 0px 0px;*/
+  border-bottom-left-radius: 100%;
+}
+
+.blue {
+  background-color: blue;
+  /*margin: 0px 0px 0px 4px;*/
+  border-bottom-right-radius: 100%;
+}
