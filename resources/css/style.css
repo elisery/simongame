@@ -6,30 +6,30 @@ html {
 body {
   display: flex;
   justify-content: center;
-  padding-top: 8rem;
+  padding-top: 6rem;
 }
 
 /*Universal Styles*/
 div {
-  border: 1px solid black;
 }
 
 /*Outer circle*/
 .outer-circle {
   margin-top: 8rem;
-  width: 28rem;
-  height: 28rem;;
+  width: 30rem;
+  height: 30rem;;
   background-color: #404040;
   border-radius: 100%;
   position: relative;
   text-align: center;
   margin: auto;
+  border: 1px solid green;
 }
 
 /*Inner circle*/
 .inner-circle {
   position: relative;
-  top: 0.75rem;
+  top: 1rem;
 }
 
 /*Circle quadrants*/
@@ -42,31 +42,49 @@ div {
 .quad {
   display: inline-block;
   position: relative;
-  width: 12rem;
-  height: 12rem;
+  width: 13rem;
+  height: 13rem;
   border: 10px solid #404040;
 }
 
 .green {
-  background-color: green;
+  background-color: #00b300;
   /*margin: 0px 4px 8px 0px;*/
   border-top-left-radius: 100%;
 }
 
 .red {
-  background-color: red;
+  background-color: #cc0000;
   /*margin: 0px 0px 8px 4px;*/
   border-top-right-radius: 100%;
 }
 
 .yellow {
-  background-color: yellow;
+  background-color: #ffff00;
   /*margin: 0px 4px 0px 0px;*/
   border-bottom-left-radius: 100%;
 }
 
 .blue {
-  background-color: blue;
+  background-color: #0000cc;
   /*margin: 0px 0px 0px 4px;*/
   border-bottom-right-radius: 100%;
+}
+
+/*Game circle*/
+.game-circle {
+  margin: 1.25rem 0rem 0rem 6.25rem;
+  width: 16rem;
+  height: 16rem;
+  top: 5rem;
+  position: absolute;
+  z-index: 5;
+  background-color: #f1f1f1;
+  border-radius: 100%;
+  border: 15px solid #404040;
+}
+
+p {
+  font-family: url('../fonts/digital-7.regular.ttf');
+  font-size: 5rem;
 }
