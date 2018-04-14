@@ -53,10 +53,10 @@ $(document).ready(function() {
       gameArr = [];
       $('.counter-display').text('01');
       //call game in regular mode or strict mode
-      /*
-      1. call random quad generator + push to array
-      2. iterate array for player
-      */
+
+
+
+
     } else {
       //render button disabled
       $('.start-button').disabled = true;
@@ -74,11 +74,15 @@ $(document).ready(function() {
         $('#circle').css('background-color', 'red');
         //call game in strict mode
 
+
+
       } else {
         strictStatus = false;
         //turn OFF 'light'
         $('#circle').css('background-color', '#333333');
         //call game in regular mode
+
+
 
       }
 
@@ -87,6 +91,77 @@ $(document).ready(function() {
       $('.start-button').disabled = true;
     }
   }); //strict button
+
+  //Choose random colour object for game array
+  function simonChoice() {
+    //Choose random # between 1 and 8
+    let n = Math.floor(Math.random() * (8 - 1) + 1);
+    //Based on number choose object to add to gameArr
+    switch (true) {
+      case (n === 1 || n === 5):
+        gameArr.push(green);
+        break;
+      case (n === 2 || n === 6):
+        gameArr.push(red);
+        break;
+      case (n === 3 || n === 7):
+        gameArr.push(yellow);
+        break;
+      case (n === 4 || n === 8):
+        gameArr.push(blue);
+        break;
+      default:
+        console.log("Error");
+    }
+  }
+
+  //Playback gameArr
+  function playBack() {
+    gameArr.forEach (obj => {
+      obj["sound"].load();
+      //if (obj === green) {
+        //obj["sound"].play();
+        setInterval('obj["sound"].play()', '3000');
+        //$('.green').css('background-color', '' + obj["colour"] + '');
+      //}
+    });
+  }
+
+  //Regular game
+  function regularGame() {
+    /*
+    1. call simonChoice
+    2. playback for user
+    3. render quadrants clickable
+    4. get input from user
+    5. if correct,
+      a) increment display
+        i)  if count === 20 reset to 1, reset gameArr
+        ii) else go back to step 1
+    6. if incorrect,
+      a) play error sound,
+      b) render quadrants unclickable
+      c) go to step 2
+    */
+  }
+
+  //Strict game
+  function strictGame() {
+    /*
+    1. call simonChoice
+    2. playback for user
+    3. render quadrants clickable
+    4. get input from user
+    5. if correct,
+      a) increment display
+        i)  if count === 20 reset to 0, reset gameArr
+        ii) else go back to step 1
+    6. if incorrect,
+      a) reset to 1, reset gameArr
+      b) render quadrants unclickable
+      c) go to step 1
+    */
+  }
 
 
 });
