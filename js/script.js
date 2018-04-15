@@ -38,7 +38,6 @@ $(document).ready(function() {
     if (checkGameStatus()) {
       //set display
       $('.counter-display').text('--')
-      green["sound"].play();
     } else {
       //remove display
       $('.counter-display').text('');
@@ -117,16 +116,42 @@ $(document).ready(function() {
 
   //Playback gameArr
   function playBack() {
-    gameArr.forEach (obj => {
-      obj["sound"].load();
+    //gameArr.forEach (obj => {
+
       //if (obj === green) {
-        //obj["sound"].play();
-        setInterval('obj["sound"].play()', '3000');
+        /*setTimeout(function() {
+          obj["sound"].load();
+          obj["sound"].playbackRate = 0.4;
+          obj["sound"].play();
+        }, 1000);*/
         //$('.green').css('background-color', '' + obj["colour"] + '');
       //}
-    });
+    //});
+    let period = 3000;
+    let endTime = gameArr.length * 1000;
+    let counter = 0;
+    let n = 0
+    let soundPlay = setInterval(function (){
+      let soundObj = gameArr[n];
+      console.log(soundObj);
+      soundObj["sound"].load();
+      soundObj["sound"].play();
+      soundObj["sound"].playbackRate = 0.3;
+      if (counter === endTime || n === gameArr.length - 1) {
+        clearInterval(soundPlay);
+      }
+      counter += period;
+      n++;
+    }, period);
   }
 
+  function lightColour(obj) {
+    
+  }
+
+  function regularColour(obj) {
+
+  }
   //Regular game
   function regularGame() {
     /*
