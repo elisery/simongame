@@ -17,7 +17,7 @@ $(document).ready(function() {
   const soundBlue = new Audio('./resources/sounds/simonSound4.mp3');
   //Set game quadrant constants
   const green = {"colour": "#4dff4d", "sound": soundGreen};
-  const red = {"colour": "FF0000", "sound": soundRed};
+  const red = {"colour": "#FF5c00", "sound": soundRed};
   const yellow = {"colour": "#ffff4d", "sound": soundYellow};
   const blue = {"colour": "#2626FF", "sound": soundBlue};
 
@@ -39,8 +39,9 @@ $(document).ready(function() {
       //set display
       $('.counter-display').text('--')
     } else {
-      //remove display
+      //remove display & reset strict light
       $('.counter-display').text('');
+      $('#circle').css('background-color', '#333333');
     }
   });
 
@@ -127,30 +128,58 @@ $(document).ready(function() {
         //$('.green').css('background-color', '' + obj["colour"] + '');
       //}
     //});
-    let period = 3000;
-    let endTime = gameArr.length * 1000;
-    let counter = 0;
+    let period = 2000;
+    //let endTime = gameArr.length * 1000;
+    //let counter = 0;
     let n = 0
     let soundPlay = setInterval(function (){
       let soundObj = gameArr[n];
       console.log(soundObj);
       soundObj["sound"].load();
       soundObj["sound"].play();
+      lightColour(soundObj);
       soundObj["sound"].playbackRate = 0.3;
-      if (counter === endTime || n === gameArr.length - 1) {
+      if (/*counter === endTime || */n === gameArr.length - 1) {
         clearInterval(soundPlay);
       }
-      counter += period;
+      //counter += period;
+      regularColour(soundObj);
       n++;
     }, period);
   }
 
   function lightColour(obj) {
-    
+    switch(obj) {
+      case green:
+        $('#green').css('background-color', '' + obj["colour"] + '');
+        break;
+      case red:
+        $('#red').css('background-color', '' + obj["colour"] + '');
+        break;
+      case blue:
+        $('#blue').css('background-color', '' + obj["colour"] + '');
+        break;
+      case yellow:
+        $('#yellow').css('background-color', '' + obj["colour"] + '');
+        break;
+    }
   }
 
   function regularColour(obj) {
-
+    switch(obj) {
+      case green:
+        $('#green').css('background-color', '#00b300');
+        break;
+      case red:
+        $('#red').css('background-color', '#cc0000');
+        break;
+      case blue:
+        $('#blue').css('background-color', '#0000cc');
+        break;
+      case yellow:
+        $('#yellow').css('background-color', '#E3E348');
+        break;
+    }
   }
   //Regular game
   function regularGame() {
@@ -187,6 +216,29 @@ $(document).ready(function() {
       c) go to step 1
     */
   }
+  //$('.row').click(function() {
 
+  function soundOnClick(colour) {
+    colour["sound"].load();
+    colour["sound"].playbackRate = 0.3;
+    colour["sound"].play();
+  }
+
+  $(this).on("mousedown", function() {
+    let clickedID = event.target.id;
+    if (clickedID === 'green') {
+      soundOnClick(green);
+      $('#green').css('background-color', '' + green["colour"] + '');
+    } else if (clickedID === 'red') {
+      soundOnClick(red);
+      $('#red').css('background-color', '' + red["colour"] + '');
+    } else if (clickedID === 'blue') {
+      soundOnClick(blue);
+      $('#blue').css('background-color', '' + blue["colour"] + '');
+    } else if (clickedID === 'yellow') {
+      soundOnClick(yellow);
+      $('#yellow').css('background-color', '' + yellow["colour"] + '');
+    }
+  });
 
 });

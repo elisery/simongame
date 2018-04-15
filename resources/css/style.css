@@ -71,25 +71,25 @@ h5 {
   border: 10px solid #404040;
 }
 
-.green {
+#green {
   background-color: #00b300;
   /*margin: 0px 4px 8px 0px;*/
   border-top-left-radius: 100%;
 }
 
-.red {
+#red {
   background-color: #cc0000;
   /*margin: 0px 0px 8px 4px;*/
   border-top-right-radius: 100%;
 }
 
-.yellow {
+#yellow {
   background-color: #E3E348;
   /*margin: 0px 4px 0px 0px;*/
   border-bottom-left-radius: 100%;
 }
 
-.blue {
+#blue {
   background-color: #0000cc;
   /*margin: 0px 0px 0px 4px;*/
   border-bottom-right-radius: 100%;
