@@ -16,10 +16,10 @@ $(document).ready(function() {
   const soundYellow = new Audio('./resources/sounds/simonSound3.mp3');
   const soundBlue = new Audio('./resources/sounds/simonSound4.mp3');
   //Set game quadrant constants
-  const green = {"colour": "#4dff4d", "sound": soundGreen};
-  const red = {"colour": "#FF5c00", "sound": soundRed};
-  const yellow = {"colour": "#ffff4d", "sound": soundYellow};
-  const blue = {"colour": "#2626FF", "sound": soundBlue};
+  const green = {"colour": "#4dff4d", "sound": soundGreen, "id": "green"};
+  const red = {"colour": "#FF5c00", "sound": soundRed, "id": "red"};
+  const yellow = {"colour": "#ffff4d", "sound": soundYellow, "id": "yellow"};
+  const blue = {"colour": "#2626FF", "sound": soundBlue, "id": "blue"};
 
   let strictStatus = false;
   let gameArr = [];
@@ -137,46 +137,46 @@ $(document).ready(function() {
       console.log(soundObj);
       soundObj["sound"].load();
       soundObj["sound"].play();
-      lightColour(soundObj);
+      lightColour(soundObj["id"]);
       soundObj["sound"].playbackRate = 0.3;
       if (/*counter === endTime || */n === gameArr.length - 1) {
         clearInterval(soundPlay);
       }
       //counter += period;
-      regularColour(soundObj);
+      regularColour(soundObj["id"]);
       n++;
     }, period);
   }
 
-  function lightColour(obj) {
-    switch(obj) {
-      case green:
-        $('#green').css('background-color', '' + obj["colour"] + '');
+  function lightColour(id) {
+    switch(id) {
+      case "green":
+        $('#green').css('background-color', '' + green["colour"] + '');
         break;
-      case red:
-        $('#red').css('background-color', '' + obj["colour"] + '');
+      case "red":
+        $('#red').css('background-color', '' + red["colour"] + '');
         break;
-      case blue:
-        $('#blue').css('background-color', '' + obj["colour"] + '');
+      case "blue":
+        $('#blue').css('background-color', '' + blue["colour"] + '');
         break;
-      case yellow:
-        $('#yellow').css('background-color', '' + obj["colour"] + '');
+      case "yellow":
+        $('#yellow').css('background-color', '' + yellow["colour"] + '');
         break;
     }
   }
 
-  function regularColour(obj) {
-    switch(obj) {
-      case green:
+  function regularColour(id) {
+    switch(id) {
+      case "green":
         $('#green').css('background-color', '#00b300');
         break;
-      case red:
+      case "red":
         $('#red').css('background-color', '#cc0000');
         break;
-      case blue:
+      case "blue":
         $('#blue').css('background-color', '#0000cc');
         break;
-      case yellow:
+      case "yellow":
         $('#yellow').css('background-color', '#E3E348');
         break;
     }
@@ -228,17 +228,21 @@ $(document).ready(function() {
     let clickedID = event.target.id;
     if (clickedID === 'green') {
       soundOnClick(green);
-      $('#green').css('background-color', '' + green["colour"] + '');
+      //$('#green').css('background-color', '' + green["colour"] + '');
     } else if (clickedID === 'red') {
       soundOnClick(red);
-      $('#red').css('background-color', '' + red["colour"] + '');
+      //$('#red').css('background-color', '' + red["colour"] + '');
     } else if (clickedID === 'blue') {
       soundOnClick(blue);
-      $('#blue').css('background-color', '' + blue["colour"] + '');
+      //$('#blue').css('background-color', '' + blue["colour"] + '');
     } else if (clickedID === 'yellow') {
       soundOnClick(yellow);
-      $('#yellow').css('background-color', '' + yellow["colour"] + '');
+      //$('#yellow').css('background-color', '' + yellow["colour"] + '');
     }
+    lightColour(clickedID);
+    $(this).on("mouseup", function() {
+      regularColour(clickedID);
+    });
   });
 
 });
