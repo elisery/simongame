@@ -25,7 +25,7 @@ $(document).ready(function() {
   let gameArr = [];
 
   //Render quadrants unclickable by default
-  $('.row').css('pointer-events', 'none');
+  //$('.row').css('pointer-events', 'none');
 
   //Check if game is on or off
   function checkGameStatus() {
@@ -89,7 +89,7 @@ $(document).ready(function() {
       //render button disabled
       $('.start-button').disabled = true;
     }
-  }); 
+  });
 
   //Choose random colour object for game array
   function simonChoice() {
@@ -133,33 +133,37 @@ $(document).ready(function() {
     let n = 0
     let soundPlay = setInterval(function (){
       let soundObj = gameArr[n];
-      console.log(soundObj);
+
       soundObj["sound"].load();
       soundObj["sound"].play();
-      lightColour(soundObj["id"]);
       soundObj["sound"].playbackRate = 0.3;
+      lightColour(soundObj["id"]);
       if (/*counter === endTime || */n === gameArr.length - 1) {
         clearInterval(soundPlay);
       }
       //counter += period;
-      regularColour(soundObj["id"]);
+      let changeBack = setTimeout(function() {
+        regularColour(soundObj["id"]);
+      }, 1000);
       n++;
     }, period);
   }
 
   function lightColour(id) {
+    console.log('lightcolour id ' + id);
+    //let id = obj["id"];
     switch(id) {
       case "green":
-        $('#green').css('background-color', '' + green["colour"] + '');
+        $('#green').css('background-color', '#4dff4d');
         break;
       case "red":
-        $('#red').css('background-color', '' + red["colour"] + '');
+        $('#red').css('background-color', '#FF5c00');
         break;
       case "blue":
-        $('#blue').css('background-color', '' + blue["colour"] + '');
+        $('#blue').css('background-color', '#2626FF');
         break;
       case "yellow":
-        $('#yellow').css('background-color', '' + yellow["colour"] + '');
+        $('#yellow').css('background-color', '#ffff4d');
         break;
     }
   }
@@ -211,11 +215,13 @@ $(document).ready(function() {
     //Start Simon says
     simonChoice();
     //Start Playback
+
     playBack();
+
     //User Play
-    while(userPlay() && checkGameStatus()) {
-      userPlay();
-    }
+    //while(userPlay() && checkGameStatus()) {
+      //userPlay();
+    //}
   }
 
   //Strict game
@@ -261,9 +267,10 @@ $(document).ready(function() {
     colour["sound"].play();
   }
 
-  function userClicks() {
+  //function userClicks() {
+    let clickedID;
     $(this).on("mousedown", function() {
-      let clickedID = event.target.id;
+      clickedID = event.target.id;
       if (clickedID === 'green') {
         soundOnClick(green);
         //$('#green').css('background-color', '' + green["colour"] + '');
@@ -281,8 +288,9 @@ $(document).ready(function() {
       $(this).on("mouseup", function() {
         regularColour(clickedID);
       });
+
     });
-    return clickedID;
-  }
+    //return clickedID;
+  //}
 
 });
