@@ -24,6 +24,9 @@ $(document).ready(function() {
   let strictStatus = false;
   let gameArr = [];
 
+  //Render quadrants unclickable by default
+  $('.row').css('pointer-events', 'none');
+
   //Check if game is on or off
   function checkGameStatus() {
     if ($('input').is(':checked')) {
@@ -53,15 +56,16 @@ $(document).ready(function() {
       gameArr = [];
       $('.counter-display').text('01');
       //call game in regular mode or strict mode
-
-
-
-
+      if (strictStatus === true) {
+        strictGame();
+      } else  {
+        regularGame();
+      }
     } else {
       //render button disabled
       $('.start-button').disabled = true;
     }
-  }); //start-button
+  });
 
   //Click Strict Button
   $('.strict-button').click(function() {
@@ -73,24 +77,19 @@ $(document).ready(function() {
         //turn ON 'light'
         $('#circle').css('background-color', 'red');
         //call game in strict mode
-
-
-
+        strictGame();
       } else {
         strictStatus = false;
         //turn OFF 'light'
         $('#circle').css('background-color', '#333333');
         //call game in regular mode
-
-
-
+        regularGame();
       }
-
     } else {
       //render button disabled
       $('.start-button').disabled = true;
     }
-  }); //strict button
+  }); 
 
   //Choose random colour object for game array
   function simonChoice() {
@@ -181,13 +180,25 @@ $(document).ready(function() {
         break;
     }
   }
+
+  //Activate quadrants for play
+  function clickAble() {
+    $('.row').css('pointer-events', 'auto');
+    $('.row').css('cursor', 'pointer');
+  }
+
+  function unClickable() {
+    $('.row').css('pointer-events', 'none');
+    $('.row').css('cursor', 'default');
+  }
+
   //Regular game
   function regularGame() {
     /*
     1. call simonChoice
     2. playback for user
     3. render quadrants clickable
-    4. get input from user
+    4. get input from user - check step by step
     5. if correct,
       a) increment display
         i)  if count === 20 reset to 1, reset gameArr
@@ -197,6 +208,14 @@ $(document).ready(function() {
       b) render quadrants unclickable
       c) go to step 2
     */
+    //Start Simon says
+    simonChoice();
+    //Start Playback
+    playBack();
+    //User Play
+    while(userPlay() && checkGameStatus()) {
+      userPlay();
+    }
   }
 
   //Strict game
@@ -205,7 +224,14 @@ $(document).ready(function() {
     1. call simonChoice
     2. playback for user
     3. render quadrants clickable
-    4. get input from user
+    4. get input from user - check step by step
+      -gamearr iterate
+        get id of user's click
+        if id  != gamearr[i] id
+          return false go to playback
+        if i === gamearr.length - 1
+          return true go to simonChoice
+
     5. if correct,
       a) increment display
         i)  if count === 20 reset to 0, reset gameArr
@@ -215,8 +241,19 @@ $(document).ready(function() {
       b) render quadrants unclickable
       c) go to step 1
     */
+
   }
-  //$('.row').click(function() {
+
+  function userPlay() {
+    for (var i = 0; i < gameArr.length; i++) {
+      let clickedID = userClicks();
+      if (clickedID !== gameArr[i]["id"]) {
+        //SHOW ERROR
+        return false;
+      }
+    }
+    return true;
+  }
 
   function soundOnClick(colour) {
     colour["sound"].load();
@@ -224,25 +261,28 @@ $(document).ready(function() {
     colour["sound"].play();
   }
 
-  $(this).on("mousedown", function() {
-    let clickedID = event.target.id;
-    if (clickedID === 'green') {
-      soundOnClick(green);
-      //$('#green').css('background-color', '' + green["colour"] + '');
-    } else if (clickedID === 'red') {
-      soundOnClick(red);
-      //$('#red').css('background-color', '' + red["colour"] + '');
-    } else if (clickedID === 'blue') {
-      soundOnClick(blue);
-      //$('#blue').css('background-color', '' + blue["colour"] + '');
-    } else if (clickedID === 'yellow') {
-      soundOnClick(yellow);
-      //$('#yellow').css('background-color', '' + yellow["colour"] + '');
-    }
-    lightColour(clickedID);
-    $(this).on("mouseup", function() {
-      regularColour(clickedID);
+  function userClicks() {
+    $(this).on("mousedown", function() {
+      let clickedID = event.target.id;
+      if (clickedID === 'green') {
+        soundOnClick(green);
+        //$('#green').css('background-color', '' + green["colour"] + '');
+      } else if (clickedID === 'red') {
+        soundOnClick(red);
+        //$('#red').css('background-color', '' + red["colour"] + '');
+      } else if (clickedID === 'blue') {
+        soundOnClick(blue);
+        //$('#blue').css('background-color', '' + blue["colour"] + '');
+      } else if (clickedID === 'yellow') {
+        soundOnClick(yellow);
+        //$('#yellow').css('background-color', '' + yellow["colour"] + '');
+      }
+      lightColour(clickedID);
+      $(this).on("mouseup", function() {
+        regularColour(clickedID);
+      });
     });
-  });
+    return clickedID;
+  }
 
 });
