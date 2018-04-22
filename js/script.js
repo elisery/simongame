@@ -25,7 +25,7 @@ $(document).ready(function() {
   let gameArr = [];
 
   //Render quadrants unclickable by default
-  //$('.row').css('pointer-events', 'none');
+  $('.row').css('pointer-events', 'none');
 
   //Check if game is on or off
   function checkGameStatus() {
@@ -40,7 +40,7 @@ $(document).ready(function() {
   $('.switch').click(function() {
     if (checkGameStatus()) {
       //set display
-      $('.counter-display').text('--')
+      $('.counter-display').text('--');
     } else {
       //remove display & reset strict light
       $('.counter-display').text('');
@@ -133,7 +133,7 @@ $(document).ready(function() {
     let n = 0
     let soundPlay = setInterval(function (){
       let soundObj = gameArr[n];
-
+//soundObj["sound"].pause();
       soundObj["sound"].load();
       soundObj["sound"].play();
       soundObj["sound"].playbackRate = 0.3;
@@ -150,8 +150,6 @@ $(document).ready(function() {
   }
 
   function lightColour(id) {
-    console.log('lightcolour id ' + id);
-    //let id = obj["id"];
     switch(id) {
       case "green":
         $('#green').css('background-color', '#4dff4d');
@@ -187,69 +185,137 @@ $(document).ready(function() {
 
   //Activate quadrants for play
   function clickAble() {
-    $('.row').css('pointer-events', 'auto');
-    $('.row').css('cursor', 'pointer');
+    $('.quad').css('pointer-events', 'auto');
+    $('.quad').css('cursor', 'pointer');
   }
 
   function unClickable() {
-    $('.row').css('pointer-events', 'none');
-    $('.row').css('cursor', 'default');
+    $('.quad').css('pointer-events', 'none');
+    $('.quad').css('cursor', 'default');
   }
 
   //Regular game
   function regularGame() {
     /*
-    1. call simonChoice
-    2. playback for user
-    3. render quadrants clickable
-    4. get input from user - check step by step
-    5. if correct,
-      a) increment display
-        i)  if count === 20 reset to 1, reset gameArr
-        ii) else go back to step 1
-    6. if incorrect,
-      a) play error sound,
-      b) render quadrants unclickable
-      c) go to step 2
+
+    for (var i = 1; i <= 20; i++) {
+      ///for each push to gameArr, playBack the arr
+      simonChoice();
+      playBack();
+      for (var j = 0; j < gameArr.length; j++) {
+        //for each gameArr entry, get a user click - use code below
+        clickAble();
+        if (gameArr[i]["id"] === clickedID) {
+          //success - increment display
+          displayVal++;
+        } else {
+          //show error message
+          errorMessage();
+          //turn off clicks
+          unClickable();
+          //reset j
+          j = 0;
+          //reset the display
+          $('.counter-display').text('01');
+          //play back the arr
+          playBack();
+        }
+      }
+    }
     */
-    //Start Simon says
+
+    let i = 0;
+
+    //Simon chooses random colour & push value to array
     simonChoice();
-    //Start Playback
+    gameArr.push();
+    console.log(gameArr);
+    //Iterate through gameArr to match values to user input
 
-    playBack();
+      if (i === 0) {
+        playBack();
+      }
+      let clickedID;
+      let displayVal = $('.counter-display').text();
 
-    //User Play
-    //while(userPlay() && checkGameStatus()) {
-      //userPlay();
-    //}
+      clickAble();
+
+      $(this).on("mousedown", function() {
+        clickedID = event.target.id;
+        console.log(clickedID);
+        if (clickedID === 'green') {
+          soundOnClick(green);
+          //$('#green').css('background-color', '' + green["colour"] + '');
+        } else if (clickedID === 'red') {
+          soundOnClick(red);
+          //$('#red').css('background-color', '' + red["colour"] + '');
+        } else if (clickedID === 'blue') {
+          soundOnClick(blue);
+          //$('#blue').css('background-color', '' + blue["colour"] + '');
+        } else if (clickedID === 'yellow') {
+          soundOnClick(yellow);
+          //$('#yellow').css('background-color', '' + yellow["colour"] + '');
+        }
+        lightColour(clickedID);
+        $(this).on("mouseup", function() {
+          regularColour(clickedID);
+        });
+        if (gameArr[i]["id"] === clickedID) {
+          //allow iteration to next value in gameArr;
+          console.log("got it!");
+          unClickable();
+          //Increment display value
+          displayVal++;
+          //if counter = 20, reset value to 1 and reset gameArr
+          if (displayVal === 20) {
+            $('.counter-display').text('01');
+            gameArr = [];
+            //break;
+          } else  {
+            $('.counter-display').text(displayVal);
+          }
+        } else {
+          //error message, go back to beginning of array & disallow clicks
+          errorMessage();
+          unClickable();
+          i = 0;
+        }
+      });
+
   }
 
   //Strict game
   function strictGame() {
     /*
-    1. call simonChoice
-    2. playback for user
-    3. render quadrants clickable
-    4. get input from user - check step by step
-      -gamearr iterate
-        get id of user's click
-        if id  != gamearr[i] id
-          return false go to playback
-        if i === gamearr.length - 1
-          return true go to simonChoice
+    1. While start is enabled && on button is on {
+        let i = 0
+        simon chooses
+        gamearr.push
+        //ADD CONDITION FOR STRICT BUTTON to call regular game
+        if strict-button = false
+          regularGame() //which resets the counter
 
-    5. if correct,
-      a) increment display
-        i)  if count === 20 reset to 0, reset gameArr
-        ii) else go back to step 1
-    6. if incorrect,
-      a) reset to 1, reset gameArr
-      b) render quadrants unclickable
-      c) go to step 1
+        while i < gamearr.length {
+          if i === 0
+            simon plays
+          ALLOW CLICKS & call userClicks to hear user's sound
+          let clickedID = userClicks() //does this play sound at same time?
+          if gamearr[i][id] === clickedID
+            i++
+          else
+            error message
+            i = 0
+            DISALLOW CLICKS
+        }
+        increment counter AND display value
+        i)  if count === 20 reset to 1, reset gameArr
+        ii) find way to flip back to original while loop
+      }
     */
 
   }
 
+  //I DONT THINK I NEED THIS FUNCTION???
   function userPlay() {
     for (var i = 0; i < gameArr.length; i++) {
       let clickedID = userClicks();
@@ -262,12 +328,16 @@ $(document).ready(function() {
   }
 
   function soundOnClick(colour) {
+    //colour["sound"].pause();
     colour["sound"].load();
     colour["sound"].playbackRate = 0.3;
-    colour["sound"].play();
+    //colour["sound"].play();
+    setTimeout(function () {
+      colour["sound"].play();
+    }, 150);
   }
 
-  //function userClicks() {
+  function userClicks() {
     let clickedID;
     $(this).on("mousedown", function() {
       clickedID = event.target.id;
@@ -288,9 +358,18 @@ $(document).ready(function() {
       $(this).on("mouseup", function() {
         regularColour(clickedID);
       });
-
     });
-    //return clickedID;
-  //}
+    console.log('THE ID ' + clickedID);
+    return clickedID;
+  }
+
+  //Error message & sound
+  function errorMessage() {
+    /*
+    1. Flash !! in display twice
+    2. Play sound twice
+    */
+    console.log('error!');
+  }
 
 });
