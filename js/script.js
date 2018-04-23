@@ -116,24 +116,12 @@ $(document).ready(function() {
 
   //Playback gameArr
   function playBack() {
-    //gameArr.forEach (obj => {
-
-      //if (obj === green) {
-        /*setTimeout(function() {
-          obj["sound"].load();
-          obj["sound"].playbackRate = 0.4;
-          obj["sound"].play();
-        }, 1000);*/
-        //$('.green').css('background-color', '' + obj["colour"] + '');
-      //}
-    //});
     let period = 2000;
     //let endTime = gameArr.length * 1000;
     //let counter = 0;
     let n = 0
     let soundPlay = setInterval(function (){
       let soundObj = gameArr[n];
-//soundObj["sound"].pause();
       soundObj["sound"].load();
       soundObj["sound"].play();
       soundObj["sound"].playbackRate = 0.3;
@@ -190,14 +178,14 @@ $(document).ready(function() {
   }
 
   function unClickable() {
-    $('.quad').css('pointer-events', 'none');
-    $('.quad').css('cursor', 'default');
+    $('.row').css('pointer-events', 'none');
+    $('.row').css('cursor', 'default');
   }
 
   //Regular game
   function regularGame() {
-    /*
 
+    /*
     for (var i = 1; i <= 20; i++) {
       ///for each push to gameArr, playBack the arr
       simonChoice();
@@ -205,10 +193,7 @@ $(document).ready(function() {
       for (var j = 0; j < gameArr.length; j++) {
         //for each gameArr entry, get a user click - use code below
         clickAble();
-        if (gameArr[i]["id"] === clickedID) {
-          //success - increment display
-          displayVal++;
-        } else {
+        if (gameArr[i]["id"] !== clickedID) {
           //show error message
           errorMessage();
           //turn off clicks
@@ -219,16 +204,26 @@ $(document).ready(function() {
           $('.counter-display').text('01');
           //play back the arr
           playBack();
+        } else {
+          unClickable();
         }
       }
-    }
-    */
+      if (displayVal === 20) {
+        $('.counter-display').text('01');
+        gameArr = [];
+        //break;
+      } else  {
+        displayVal++;
+        $('.counter-display').text(displayVal);
+      }
+    }*/
+
+
 
     let i = 0;
 
     //Simon chooses random colour & push value to array
     simonChoice();
-    gameArr.push();
     console.log(gameArr);
     //Iterate through gameArr to match values to user input
 
@@ -240,9 +235,9 @@ $(document).ready(function() {
 
       clickAble();
 
-      $(this).on("mousedown", function() {
+      $('.quad').on("mousedown", function() {
         clickedID = event.target.id;
-        console.log(clickedID);
+        console.log(clickedID + " " + i);
         if (clickedID === 'green') {
           soundOnClick(green);
           //$('#green').css('background-color', '' + green["colour"] + '');
@@ -257,7 +252,7 @@ $(document).ready(function() {
           //$('#yellow').css('background-color', '' + yellow["colour"] + '');
         }
         lightColour(clickedID);
-        $(this).on("mouseup", function() {
+        $('.quad').on("mouseup", function() {
           regularColour(clickedID);
         });
         if (gameArr[i]["id"] === clickedID) {
@@ -271,7 +266,10 @@ $(document).ready(function() {
             $('.counter-display').text('01');
             gameArr = [];
             //break;
-          } else  {
+          } else if (displayVal < 10) {
+            displayVal = "0" + displayVal;
+            $('.counter-display').text(displayVal);
+            } else  {
             $('.counter-display').text(displayVal);
           }
         } else {
@@ -328,7 +326,6 @@ $(document).ready(function() {
   }
 
   function soundOnClick(colour) {
-    //colour["sound"].pause();
     colour["sound"].load();
     colour["sound"].playbackRate = 0.3;
     //colour["sound"].play();
@@ -359,7 +356,6 @@ $(document).ready(function() {
         regularColour(clickedID);
       });
     });
-    console.log('THE ID ' + clickedID);
     return clickedID;
   }
 
@@ -369,6 +365,20 @@ $(document).ready(function() {
     1. Flash !! in display twice
     2. Play sound twice
     */
+
+    let n = 0
+    let soundPlay = setInterval(function (){
+      //let soundObj = gameArr[n];
+      //red["sound"].load();
+      //red["sound"].playbackRate = 0.1;
+      //red["sound"].play();
+      $('.counter-display').text('!!');
+      if (n === 1) {
+        clearInterval(soundPlay);
+        $('.counter-display').text('01');
+      }
+      n++;
+    }, 1000);
     console.log('error!');
   }
 
