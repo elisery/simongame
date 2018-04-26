@@ -185,13 +185,59 @@ $(document).ready(function() {
   //Regular game
   function regularGame() {
 
-    /*
     for (var i = 1; i <= 20; i++) {
       ///for each push to gameArr, playBack the arr
       simonChoice();
       playBack();
       for (var j = 0; j < gameArr.length; j++) {
         //for each gameArr entry, get a user click - use code below
+        /* Insert click code start */
+        $('.quad').on("mousedown", function() {
+          clickedID = event.target.id;
+          console.log(clickedID + " " + i);
+          if (clickedID === 'green') {
+            soundOnClick(green);
+            //$('#green').css('background-color', '' + green["colour"] + '');
+          } else if (clickedID === 'red') {
+            soundOnClick(red);
+            //$('#red').css('background-color', '' + red["colour"] + '');
+          } else if (clickedID === 'blue') {
+            soundOnClick(blue);
+            //$('#blue').css('background-color', '' + blue["colour"] + '');
+          } else if (clickedID === 'yellow') {
+            soundOnClick(yellow);
+            //$('#yellow').css('background-color', '' + yellow["colour"] + '');
+          }
+          lightColour(clickedID);
+          $('.quad').on("mouseup", function() {
+            regularColour(clickedID);
+          });
+          if (gameArr[i]["id"] === clickedID) {
+            //allow iteration to next value in gameArr;
+            console.log("got it!");
+            unClickable();
+            //Increment display value
+            displayVal++;
+            //if counter = 20, reset value to 1 and reset gameArr
+            if (displayVal === 20) {
+              $('.counter-display').text('01');
+              gameArr = [];
+              //break;
+            } else if (displayVal < 10) {
+              displayVal = "0" + displayVal;
+              $('.counter-display').text(displayVal);
+              } else  {
+              $('.counter-display').text(displayVal);
+            }
+          } else {
+            //error message, go back to beginning of array & disallow clicks
+            errorMessage();
+            unClickable();
+            i = 0;
+          }
+        });
+        /* Insert click code end */
+
         clickAble();
         if (gameArr[i]["id"] !== clickedID) {
           //show error message
@@ -216,12 +262,11 @@ $(document).ready(function() {
         displayVal++;
         $('.counter-display').text(displayVal);
       }
-    }*/
+    }
 
-
-
+    /*TEST CODE FOR ONE ITERATION START*/
+    /*
     let i = 0;
-
     //Simon chooses random colour & push value to array
     simonChoice();
     console.log(gameArr);
@@ -278,8 +323,8 @@ $(document).ready(function() {
           unClickable();
           i = 0;
         }
-      });
-
+      }); */
+      /*TEST CODE FOR ONE ITERATION END*/
   }
 
   //Strict game
