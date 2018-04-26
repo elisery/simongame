@@ -253,7 +253,7 @@ $(document).ready(function() {
         } else {
           unClickable();
         }
-      }
+      } //inner for loop
       if (displayVal === 20) {
         $('.counter-display').text('01');
         gameArr = [];
@@ -262,7 +262,7 @@ $(document).ready(function() {
         displayVal++;
         $('.counter-display').text(displayVal);
       }
-    }
+    } //outer for loop 
 
     /*TEST CODE FOR ONE ITERATION START*/
     /*
