@@ -1,15 +1,4 @@
 $(document).ready(function() {
-  /*
-
-  4. "Strict" lights up "circle" - changes color to bright red
-    a) if mistake made, display shows "!!"
-    b) game resets to 1
-  5. Game play:
-    a) game chooses and plays random colour
-    b) user has to repeat colour
-    c) if correct, game chooses another random color and plays the entire array
-    d) if incorrect, game shows "!!" and plays the array until user correct
-  */
   //Set Sound constants
   const soundGreen = new Audio('./resources/sounds/simonSound1.mp3');
   const soundRed = new Audio('./resources/sounds/simonSound2.mp3');
@@ -46,11 +35,9 @@ $(document).ready(function() {
       //remove display & reset strict light
       $('.counter-display').text('');
       $('#circle').css('background-color', '#333333');
+      unClickable();
     }
   });
-
-  //Game on/off
-
 
   //Click Start Button
   $('.start-button').click(function() {
@@ -66,7 +53,7 @@ $(document).ready(function() {
       //if (strictStatus === true) {
         //strictGame();
       //} else  {
-        regularGame();
+      //regularGame();
       //}
     } else {
       //render button disabled
@@ -87,7 +74,6 @@ $(document).ready(function() {
         strictStatus = false;
         //turn OFF 'light'
         $('#circle').css('background-color', '#333333');
-        //call game in regular mode
       }
     } else {
       //render button disabled
@@ -121,13 +107,17 @@ $(document).ready(function() {
   //Playback gameArr
   function playBack() {
     let period = 2000;
-    //let endTime = gameArr.length * 1000;
-    //let counter = 0;
     let n = 0
+
     let soundPlay = setInterval(function (){
       let soundObj = gameArr[n];
       soundObj["sound"].load();
       soundObj["sound"].play();
+      if (!checkGameStatus()) {
+        gameArr, userArr = [];
+        clearInterval(soundPlay);
+        return;
+      }
       soundObj["sound"].playbackRate = 0.3;
       lightColour(soundObj["id"]);
       if (/*counter === endTime || */n === gameArr.length - 1) {
@@ -140,6 +130,7 @@ $(document).ready(function() {
       n++;
     }, period);
     clickAble();
+
   }
 
   function addCommand() {
@@ -190,6 +181,7 @@ $(document).ready(function() {
   function unClickable() {
     $('.row').css('pointer-events', 'none');
     $('.row').css('cursor', 'default');
+    $('.quad').css('pointer-events', 'none');
   }
 
   //User pushes button
@@ -220,7 +212,7 @@ $(document).ready(function() {
     //if (strictStatus === true) {
       //strictGame();
     //} else  {
-      regularGame();
+    regularGame();
     //}
   });
 
@@ -259,20 +251,13 @@ $(document).ready(function() {
     } else if (userArr.length === gameArr.length && compare(userArr, gameArr)) {
       unClickable();
       userArr = [];
-      displayVal = 20;
       displayVal++;
       if (displayVal < 10) {
         displayVal = "0" + displayVal;
         $('.counter-display').text(displayVal);
       } else if (displayVal === 21) {
         //reset game
-
-        //setTimeout(function () {
-
         winSound();
-
-        //}, 500);
-        //$('.counter-display').text('01');
         gameArr = [];
       } else {
         $('.counter-display').text(displayVal);
@@ -313,7 +298,7 @@ $(document).ready(function() {
   }
 
   //I DONT THINK I NEED THIS FUNCTION???
-  function userPlay() {
+  /*function userPlay() {
     for (var i = 0; i < gameArr.length; i++) {
       let clickedID = userClicks();
       if (clickedID !== gameArr[i]["id"]) {
@@ -322,7 +307,7 @@ $(document).ready(function() {
       }
     }
     return true;
-  }
+  }*/
 
   function soundOnClick(colour) {
     colour["sound"].load();
@@ -348,7 +333,7 @@ $(document).ready(function() {
     }, 150);
 
   }
-
+  /*
   function userClicks() {
     let clickedID;
     $(this).on("mousedown", function() {
@@ -368,7 +353,7 @@ $(document).ready(function() {
       });
     });
     return clickedID;
-  }
+  }*/
 
   //Error message & sound
   function errorMessage() {
