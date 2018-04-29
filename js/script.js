@@ -49,12 +49,7 @@ $(document).ready(function() {
       $('.counter-display').text('01');
       //Play initial step
       addCommand();
-      //call game in regular mode or strict mode
-      //if (strictStatus === true) {
-        //strictGame();
-      //} else  {
-      //regularGame();
-      //}
+
     } else {
       //render button disabled
       $('.start-button').disabled = true;
@@ -84,19 +79,19 @@ $(document).ready(function() {
   //Choose random colour object for game array
   function simonChoice() {
     //Choose random # between 1 and 8
-    let n = Math.floor(Math.random() * (8 - 1) + 1);
+    let n = Math.floor(Math.random() * (12 - 1) + 1);
     //Based on number choose object to add to gameArr
     switch (true) {
-      case (n === 1 || n === 5):
+      case (n === 1 || n === 5 || n === 9):
         gameArr.push(green);
         break;
-      case (n === 2 || n === 6):
+      case (n === 2 || n === 6 || n === 10):
         gameArr.push(red);
         break;
-      case (n === 3 || n === 7):
+      case (n === 3 || n === 7 || n === 11):
         gameArr.push(yellow);
         break;
-      case (n === 4 || n === 8):
+      case (n === 4 || n === 8 || n === 12):
         gameArr.push(blue);
         break;
       default:
@@ -120,7 +115,7 @@ $(document).ready(function() {
       }
       soundObj["sound"].playbackRate = 0.3;
       lightColour(soundObj["id"]);
-      if (/*counter === endTime || */n === gameArr.length - 1) {
+      if (n === gameArr.length - 1) {
         clearInterval(soundPlay);
       }
       //counter += period;
@@ -187,33 +182,26 @@ $(document).ready(function() {
   //User pushes button
   $('.quad').on("mousedown", function() {
     clickedID = event.target.id;
-    //console.log(clickedID + " " + i);
     if (clickedID === 'green') {
       soundOnClick(green);
       userArr.push(green);
-      //$('#green').css('background-color', '' + green["colour"] + '');
     } else if (clickedID === 'red') {
       soundOnClick(red);
       userArr.push(red);
-      //$('#red').css('background-color', '' + red["colour"] + '');
     } else if (clickedID === 'blue') {
       soundOnClick(blue);
       userArr.push(blue);
-      //$('#blue').css('background-color', '' + blue["colour"] + '');
     } else if (clickedID === 'yellow') {
       soundOnClick(yellow);
       userArr.push(yellow);
-      //$('#yellow').css('background-color', '' + yellow["colour"] + '');
     }
     lightColour(clickedID);
     $('.quad').on("mouseup", function() {
       regularColour(clickedID);
     });
-    //if (strictStatus === true) {
-      //strictGame();
-    //} else  {
+
     regularGame();
-    //}
+
   });
 
   function compare(firstArr, secondArr) {
@@ -227,23 +215,13 @@ $(document).ready(function() {
 
   //Regular game
   function regularGame() {
-    /*
-    1. simonchoice & playback
-    2. user clicks & push to userArr
-    3. compare userarr and gamearr
-    4. if wrong, playback again
-    5. if right, simon choice & playback
-    */
-    //console.log(gameArr);
-    //Iterate through gameArr to match values to user input
+    //Match userArr and section of gameArr
     let displayVal = $('.counter-display').text();
     if (!compare(userArr, gameArr.slice(0, userArr.length))) {
       userArr = [];
       errorMessage();
-      console.log(strictStatus);
       if (strictStatus === true) {
         gameArr = [];
-          console.log('we are strict!');
         addCommand();
       }
 
@@ -266,53 +244,9 @@ $(document).ready(function() {
     }
   }
 
-  //Strict game
-  function strictGame() {
-    /*
-    1. While start is enabled && on button is on {
-        let i = 0
-        simon chooses
-        gamearr.push
-        //ADD CONDITION FOR STRICT BUTTON to call regular game
-        if strict-button = false
-          regularGame() //which resets the counter
-
-        while i < gamearr.length {
-          if i === 0
-            simon plays
-          ALLOW CLICKS & call userClicks to hear user's sound
-          let clickedID = userClicks() //does this play sound at same time?
-          if gamearr[i][id] === clickedID
-            i++
-          else
-            error message
-            i = 0
-            DISALLOW CLICKS
-        }
-        increment counter AND display value
-        i)  if count === 20 reset to 1, reset gameArr
-        ii) find way to flip back to original while loop
-      }
-    */
-
-  }
-
-  //I DONT THINK I NEED THIS FUNCTION???
-  /*function userPlay() {
-    for (var i = 0; i < gameArr.length; i++) {
-      let clickedID = userClicks();
-      if (clickedID !== gameArr[i]["id"]) {
-        //SHOW ERROR
-        return false;
-      }
-    }
-    return true;
-  }*/
-
   function soundOnClick(colour) {
     colour["sound"].load();
     colour["sound"].playbackRate = 0.3;
-    //colour["sound"].play();
     setTimeout(function () {
       colour["sound"].play();
     }, 150);
@@ -323,7 +257,6 @@ $(document).ready(function() {
     red["sound"].playbackRate = 0.3;
 
     let winMessage = setInterval(function() {
-      //red["sound"].play();
       $('.counter-display').text('**');
       let clearMessage = setInterval(function() {
         $('.counter-display').text('01');
@@ -333,34 +266,9 @@ $(document).ready(function() {
     }, 150);
 
   }
-  /*
-  function userClicks() {
-    let clickedID;
-    $(this).on("mousedown", function() {
-      clickedID = event.target.id;
-      if (clickedID === 'green') {
-        soundOnClick(green);
-      } else if (clickedID === 'red') {
-        soundOnClick(red);
-      } else if (clickedID === 'blue') {
-        soundOnClick(blue);
-      } else if (clickedID === 'yellow') {
-        soundOnClick(yellow);
-      }
-      lightColour(clickedID);
-      $(this).on("mouseup", function() {
-        regularColour(clickedID);
-      });
-    });
-    return clickedID;
-  }*/
 
   //Error message & sound
   function errorMessage() {
-    /*
-    1. Flash !! in display twice
-    2. Play sound twice
-    */
     unClickable();
     let soundPlay = setInterval(function (){
 
@@ -377,6 +285,5 @@ $(document).ready(function() {
       }, 1000);
       clearInterval(soundPlay);
     }, 1000);
-    console.log('error!');
   }
 });
