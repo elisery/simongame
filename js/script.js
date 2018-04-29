@@ -23,6 +23,7 @@ $(document).ready(function() {
 
   let strictStatus = false;
   let gameArr = [];
+  let userArr = [];
 
   //Render quadrants unclickable by default
   $('.row').css('pointer-events', 'none');
@@ -48,19 +49,25 @@ $(document).ready(function() {
     }
   });
 
+  //Game on/off
+
+
   //Click Start Button
   $('.start-button').click(function() {
     //check if game is on
     if (checkGameStatus()) {
       //reset variables & display
       gameArr = [];
+      userArr = [];
       $('.counter-display').text('01');
+      //Play initial step
+      addCommand();
       //call game in regular mode or strict mode
-      if (strictStatus === true) {
-        strictGame();
-      } else  {
+      //if (strictStatus === true) {
+        //strictGame();
+      //} else  {
         regularGame();
-      }
+      //}
     } else {
       //render button disabled
       $('.start-button').disabled = true;
@@ -76,14 +83,11 @@ $(document).ready(function() {
         strictStatus = true;
         //turn ON 'light'
         $('#circle').css('background-color', 'red');
-        //call game in strict mode
-        strictGame();
       } else {
         strictStatus = false;
         //turn OFF 'light'
         $('#circle').css('background-color', '#333333');
         //call game in regular mode
-        regularGame();
       }
     } else {
       //render button disabled
@@ -135,6 +139,12 @@ $(document).ready(function() {
       }, 1000);
       n++;
     }, period);
+    clickAble();
+  }
+
+  function addCommand() {
+    simonChoice();
+    playBack();
   }
 
   function lightColour(id) {
@@ -182,149 +192,93 @@ $(document).ready(function() {
     $('.row').css('cursor', 'default');
   }
 
+  //User pushes button
+  $('.quad').on("mousedown", function() {
+    clickedID = event.target.id;
+    //console.log(clickedID + " " + i);
+    if (clickedID === 'green') {
+      soundOnClick(green);
+      userArr.push(green);
+      //$('#green').css('background-color', '' + green["colour"] + '');
+    } else if (clickedID === 'red') {
+      soundOnClick(red);
+      userArr.push(red);
+      //$('#red').css('background-color', '' + red["colour"] + '');
+    } else if (clickedID === 'blue') {
+      soundOnClick(blue);
+      userArr.push(blue);
+      //$('#blue').css('background-color', '' + blue["colour"] + '');
+    } else if (clickedID === 'yellow') {
+      soundOnClick(yellow);
+      userArr.push(yellow);
+      //$('#yellow').css('background-color', '' + yellow["colour"] + '');
+    }
+    lightColour(clickedID);
+    $('.quad').on("mouseup", function() {
+      regularColour(clickedID);
+    });
+    //if (strictStatus === true) {
+      //strictGame();
+    //} else  {
+      regularGame();
+    //}
+  });
+
+  function compare(firstArr, secondArr) {
+    for (var i = 0; i < firstArr.length; i++) {
+      if (firstArr[i] !== secondArr[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   //Regular game
   function regularGame() {
-
-    for (var i = 1; i <= 20; i++) {
-      ///for each push to gameArr, playBack the arr
-      simonChoice();
-      playBack();
-      for (var j = 0; j < gameArr.length; j++) {
-        //for each gameArr entry, get a user click - use code below
-        /* Insert click code start */
-        $('.quad').on("mousedown", function() {
-          clickedID = event.target.id;
-          console.log(clickedID + " " + i);
-          if (clickedID === 'green') {
-            soundOnClick(green);
-            //$('#green').css('background-color', '' + green["colour"] + '');
-          } else if (clickedID === 'red') {
-            soundOnClick(red);
-            //$('#red').css('background-color', '' + red["colour"] + '');
-          } else if (clickedID === 'blue') {
-            soundOnClick(blue);
-            //$('#blue').css('background-color', '' + blue["colour"] + '');
-          } else if (clickedID === 'yellow') {
-            soundOnClick(yellow);
-            //$('#yellow').css('background-color', '' + yellow["colour"] + '');
-          }
-          lightColour(clickedID);
-          $('.quad').on("mouseup", function() {
-            regularColour(clickedID);
-          });
-          if (gameArr[i]["id"] === clickedID) {
-            //allow iteration to next value in gameArr;
-            console.log("got it!");
-            unClickable();
-            //Increment display value
-            displayVal++;
-            //if counter = 20, reset value to 1 and reset gameArr
-            if (displayVal === 20) {
-              $('.counter-display').text('01');
-              gameArr = [];
-              //break;
-            } else if (displayVal < 10) {
-              displayVal = "0" + displayVal;
-              $('.counter-display').text(displayVal);
-              } else  {
-              $('.counter-display').text(displayVal);
-            }
-          } else {
-            //error message, go back to beginning of array & disallow clicks
-            errorMessage();
-            unClickable();
-            i = 0;
-          }
-        });
-        /* Insert click code end */
-
-        clickAble();
-        if (gameArr[i]["id"] !== clickedID) {
-          //show error message
-          errorMessage();
-          //turn off clicks
-          unClickable();
-          //reset j
-          j = 0;
-          //reset the display
-          $('.counter-display').text('01');
-          //play back the arr
-          playBack();
-        } else {
-          unClickable();
-        }
-      } //inner for loop
-      if (displayVal === 20) {
-        $('.counter-display').text('01');
+    /*
+    1. simonchoice & playback
+    2. user clicks & push to userArr
+    3. compare userarr and gamearr
+    4. if wrong, playback again
+    5. if right, simon choice & playback
+    */
+    //console.log(gameArr);
+    //Iterate through gameArr to match values to user input
+    let displayVal = $('.counter-display').text();
+    if (!compare(userArr, gameArr.slice(0, userArr.length))) {
+      userArr = [];
+      errorMessage();
+      console.log(strictStatus);
+      if (strictStatus === true) {
         gameArr = [];
-        //break;
-      } else  {
-        displayVal++;
+          console.log('we are strict!');
+        addCommand();
+      }
+
+      playBack();
+    } else if (userArr.length === gameArr.length && compare(userArr, gameArr)) {
+      unClickable();
+      userArr = [];
+      displayVal = 20;
+      displayVal++;
+      if (displayVal < 10) {
+        displayVal = "0" + displayVal;
+        $('.counter-display').text(displayVal);
+      } else if (displayVal === 21) {
+        //reset game
+
+        //setTimeout(function () {
+
+        winSound();
+
+        //}, 500);
+        //$('.counter-display').text('01');
+        gameArr = [];
+      } else {
         $('.counter-display').text(displayVal);
       }
-    } //outer for loop 
-
-    /*TEST CODE FOR ONE ITERATION START*/
-    /*
-    let i = 0;
-    //Simon chooses random colour & push value to array
-    simonChoice();
-    console.log(gameArr);
-    //Iterate through gameArr to match values to user input
-
-      if (i === 0) {
-        playBack();
-      }
-      let clickedID;
-      let displayVal = $('.counter-display').text();
-
-      clickAble();
-
-      $('.quad').on("mousedown", function() {
-        clickedID = event.target.id;
-        console.log(clickedID + " " + i);
-        if (clickedID === 'green') {
-          soundOnClick(green);
-          //$('#green').css('background-color', '' + green["colour"] + '');
-        } else if (clickedID === 'red') {
-          soundOnClick(red);
-          //$('#red').css('background-color', '' + red["colour"] + '');
-        } else if (clickedID === 'blue') {
-          soundOnClick(blue);
-          //$('#blue').css('background-color', '' + blue["colour"] + '');
-        } else if (clickedID === 'yellow') {
-          soundOnClick(yellow);
-          //$('#yellow').css('background-color', '' + yellow["colour"] + '');
-        }
-        lightColour(clickedID);
-        $('.quad').on("mouseup", function() {
-          regularColour(clickedID);
-        });
-        if (gameArr[i]["id"] === clickedID) {
-          //allow iteration to next value in gameArr;
-          console.log("got it!");
-          unClickable();
-          //Increment display value
-          displayVal++;
-          //if counter = 20, reset value to 1 and reset gameArr
-          if (displayVal === 20) {
-            $('.counter-display').text('01');
-            gameArr = [];
-            //break;
-          } else if (displayVal < 10) {
-            displayVal = "0" + displayVal;
-            $('.counter-display').text(displayVal);
-            } else  {
-            $('.counter-display').text(displayVal);
-          }
-        } else {
-          //error message, go back to beginning of array & disallow clicks
-          errorMessage();
-          unClickable();
-          i = 0;
-        }
-      }); */
-      /*TEST CODE FOR ONE ITERATION END*/
+      addCommand();
+    }
   }
 
   //Strict game
@@ -379,22 +333,34 @@ $(document).ready(function() {
     }, 150);
   }
 
+  function winSound() {
+    red["sound"].load();
+    red["sound"].playbackRate = 0.3;
+
+    let winMessage = setInterval(function() {
+      //red["sound"].play();
+      $('.counter-display').text('**');
+      let clearMessage = setInterval(function() {
+        $('.counter-display').text('01');
+        clearInterval(clearMessage);
+      }, 1500);
+      clearInterval(winMessage);
+    }, 150);
+
+  }
+
   function userClicks() {
     let clickedID;
     $(this).on("mousedown", function() {
       clickedID = event.target.id;
       if (clickedID === 'green') {
         soundOnClick(green);
-        //$('#green').css('background-color', '' + green["colour"] + '');
       } else if (clickedID === 'red') {
         soundOnClick(red);
-        //$('#red').css('background-color', '' + red["colour"] + '');
       } else if (clickedID === 'blue') {
         soundOnClick(blue);
-        //$('#blue').css('background-color', '' + blue["colour"] + '');
       } else if (clickedID === 'yellow') {
         soundOnClick(yellow);
-        //$('#yellow').css('background-color', '' + yellow["colour"] + '');
       }
       lightColour(clickedID);
       $(this).on("mouseup", function() {
@@ -410,21 +376,22 @@ $(document).ready(function() {
     1. Flash !! in display twice
     2. Play sound twice
     */
-
-    let n = 0
+    unClickable();
     let soundPlay = setInterval(function (){
-      //let soundObj = gameArr[n];
-      //red["sound"].load();
-      //red["sound"].playbackRate = 0.1;
-      //red["sound"].play();
+
+      let displayVal = $('.counter-display').text();
       $('.counter-display').text('!!');
-      if (n === 1) {
-        clearInterval(soundPlay);
-        $('.counter-display').text('01');
-      }
-      n++;
+      let errorDisplay = setInterval(function() {
+        if (strictStatus === true) {
+          $('.counter-display').text('01');
+
+        } else {
+          $('.counter-display').text(displayVal);
+        }
+        clearInterval(errorDisplay);
+      }, 1000);
+      clearInterval(soundPlay);
     }, 1000);
     console.log('error!');
   }
-
 });
